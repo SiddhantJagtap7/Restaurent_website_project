@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}Our Menu - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <h1 class="text-4xl font-bold text-center text-gray-900 mb-4">
+        Our Menu
+    </h1>
+
+    <!-- Navigation Buttons -->
+    <div class="flex justify-center gap-4 mb-8 animate-float-in delay-200">
+        <a href="{% url 'index' %}"
+            class="px-6 py-3 bg-gray-600 text-white rounded-md font-medium hover:bg-gray-700 shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Home
+        </a>
+        <a href="{% url 'reservation' %}"
+            class="px-6 py-3 bg-indigo-600 text-white rounded-md font-medium hover:bg-indigo-700 shadow-lg transform hover:scale-105 transition-all duration-300 animate-glow">
+            Book a Table
+        </a>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="max-w-2xl mx-auto mb-8 scroll-reveal">
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <input type="text" id="menu-search" placeholder="Search for dishes or categories..."
+                class="w-full pl-12 pr-12 py-4 text-lg border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-300 shadow-md"
+                autocomplete="off" />
+            <div id="search-clear" class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer hidden">
+                <svg class="w-5 h-5 text-gray-400 hover:text-gray-600 transition-colors" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </div>
+        </div>
+        <!-- Search Results Counter -->
+        <div id="search-results" class="mt-2 text-center text-sm text-gray-600 hidden"></div>
+        <!-- No Results Message -->
+        <div id="no-results" class="mt-4 text-center text-gray-500 hidden">
+            <svg class="w-16 h-16 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-lg font-medium">No items found</p>
+            <p class="text-sm">Try searching with different keywords</p>
+        </div>
+    </div>
+
+    {% if categories %}
+    {% for category in categories %}
+    <section class="mb-12 scroll-reveal menu-category" data-category-name="{{ category.name }}">
+        <h2
+            class="category-header text-3xl font-semibold text-indigo-700 mb-6 border-b-2 border-indigo-200 pb-2 capitalize hover-glow transition-all duration-300">
+            {{ category.name }}s
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 menu-items-grid">
+            {% for item in category.items %}
+            <div class="menu-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300"
+                data-item-name="{{ item.name|lower }}" data-item-description="{{ item.description|lower }}"
+                style="animation-delay: {{ forloop.counter0 | add:forloop.parentloop.counter0 }}00ms;">
+
+                <!-- Dish Image Placeholder - Add your own images here -->
+                <div class="h-32 bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-400 text-xs">Add dish image</span>
+                </div>
+
+                <div class="p-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3
+                            class="item-name text-lg font-bold text-gray-900 hover:text-indigo-600 transition-colors duration-300">
+                            {{ item.name }}
+                        </h3>
+                        <div class="text-right">
+                            {% if item.sizes_and_prices %}
+                            {% for size_price in item.sizes_and_prices %}
+                            <div class="text-sm font-bold text-amber-600">
+                                {{ size_price.size }}: ₹{{ size_price.price }}
+                            </div>
+                            {% endfor %}
+                            {% elif item.price %}
+                            <span class="text-lg font-bold text-amber-600">₹{{ item.price }}</span>
+                            {% else %}
+                            <span class="text-sm text-gray-400">Price not set</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <p class="item-description text-sm text-gray-600">
+                        {{ item.description }}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endfor %}
+    {% else %}
+    <div class="text-center text-gray-600 animate-fade-in-down">
+        <h2 class="text-2xl font-semibold mb-4">Our menu is currently being updated.</h2>
+        <p>Please check back soon!</p>
+        <p class="mt-4 text-sm">Are you the admin? <a href="/admin/restaurant/menuitem/add/"
+                class="text-indigo-600 hover:underline hover-glow">Add some menu items!</a></p>
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+    // DOMContentLoaded removed for SPA compatibility
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe all scroll-reveal elements
+    document.querySelectorAll('.scroll-reveal').forEach(el => {
+        observer.observe(el);
+    });
+
+    // ===== SEARCH FUNCTIONALITY =====
+    const searchInput = document.getElementById('menu-search');
+    const searchClear = document.getElementById('search-clear');
+    const searchResults = document.getElementById('search-results');
+    const noResults = document.getElementById('no-results');
+    const menuCategories = document.querySelectorAll('.menu-category');
+    const menuItems = document.querySelectorAll('.menu-item');
+
+    // Search function
+    function performSearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+
+        // Show/hide clear button
+        if (searchTerm) {
+            searchClear.classList.remove('hidden');
+        } else {
+            searchClear.classList.add('hidden');
+            // Reset all items and categories
+            menuCategories.forEach(cat => cat.style.display = 'block');
+            menuItems.forEach(item => {
+                item.style.display = 'block';
+                // Remove highlight
+                const itemName = item.querySelector('.item-name');
+                itemName.innerHTML = itemName.textContent;
+            });
+            searchResults.classList.add('hidden');
+            noResults.classList.add('hidden');
+            return;
+        }
+
+        let visibleItemsCount = 0;
+        let visibleCategoriesCount = 0;
+
+        // Search through categories and items
+        menuCategories.forEach(category => {
+            const categoryName = category.getAttribute('data-category-name').toLowerCase();
+            const categoryItems = category.querySelectorAll('.menu-item');
+            let categoryHasVisibleItems = false;
+
+            // Check if category name matches
+            const categoryMatches = categoryName.includes(searchTerm);
+
+            categoryItems.forEach(item => {
+                const itemName = item.getAttribute('data-item-name');
+                const itemDescription = item.getAttribute('data-item-description');
+
+                // Check if item matches search
+                const itemMatches = itemName.includes(searchTerm) ||
+                    itemDescription.includes(searchTerm) ||
+                    categoryMatches;
+
+                if (itemMatches) {
+                    item.style.display = 'block';
+                    categoryHasVisibleItems = true;
+                    visibleItemsCount++;
+
+                    // Highlight matching text in item name
+                    const itemNameElement = item.querySelector('.item-name');
+                    const originalText = itemNameElement.textContent;
+                    if (itemName.includes(searchTerm) && searchTerm.length > 0) {
+                        const regex = new RegExp(`(${searchTerm})`, 'gi');
+                        const highlightedText = originalText.replace(regex, '<span class="bg-yellow-200 text-gray-900">$1</span>');
+                        itemNameElement.innerHTML = highlightedText;
+                    } else {
+                        itemNameElement.innerHTML = originalText;
+                    }
+                } else {
+                    item.style.display = 'none';
+                    // Remove highlight
+                    const itemNameElement = item.querySelector('.item-name');
+                    itemNameElement.innerHTML = itemNameElement.textContent;
+                }
+            });
+
+            // Show/hide category based on whether it has visible items
+            if (categoryHasVisibleItems) {
+                category.style.display = 'block';
+                visibleCategoriesCount++;
+            } else {
+                category.style.display = 'none';
+            }
+        });
+
+        // Update results counter
+        if (visibleItemsCount > 0) {
+            searchResults.textContent = `Found ${visibleItemsCount} item${visibleItemsCount !== 1 ? 's' : ''} in ${visibleCategoriesCount} categor${visibleCategoriesCount !== 1 ? 'ies' : 'y'}`;
+            searchResults.classList.remove('hidden');
+            noResults.classList.add('hidden');
+        } else {
+            searchResults.classList.add('hidden');
+            noResults.classList.remove('hidden');
+        }
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', performSearch);
+
+    searchClear.addEventListener('click', () => {
+        searchInput.value = '';
+        performSearch();
+        searchInput.focus();
+    });
+
+    // Clear search on Escape key
+    searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            searchInput.value = '';
+            performSearch();
+        }
+    });
+    // End of script
+
+</script>
+
+{% endblock %}

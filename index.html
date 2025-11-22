@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Welcome - {{ block.super }}{% endblock %}
+
+{% block content %}
+
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    {% if messages %}
+    {% for message in messages %}
+    <div
+        class="p-4 rounded-md animate-slide-right delay-100
+                {% if message.tags == 'success' %} bg-green-100 text-green-800 {% else %} bg-red-100 text-red-800 {% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+
+<!-- Enhanced Hero Section with Parallax Effect and Restaurant Images -->
+<div id="hero-section"
+    class="relative h-[60vh] min-h-[400px] flex items-center justify-center text-center text-white overflow-hidden"
+    style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80'); background-size: cover; background-position: center;">
+    <div class="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+
+    <div class="relative z-20 p-4 parallax-layer">
+
+        <h1
+            class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-shadow-lg animate-float-in animate-float-in-1">
+            Welcome to Mata Pita Da Dhaba
+        </h1>
+
+        <p class="mt-4 text-lg sm:text-xl text-shadow-md max-w-2xl mx-auto animate-float-in animate-float-in-2">
+            Experience the authentic taste of home-cooked meals, crafted with love and fresh, local ingredients.
+        </p>
+
+        <div class="mt-8 flex flex-wrap justify-center gap-4 animate-float-in animate-float-in-3">
+            <a href="{% url 'menu' %}"
+                class="nav-link animate-float px-8 py-3 rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg transform hover:scale-105 transition-all duration-300">
+                View Our Menu
+            </a>
+            <a href="{% url 'reservation' %}"
+                class="nav-link animate-float-slow px-8 py-3 rounded-md text-base font-medium text-gray-800 bg-white hover:bg-gray-100 shadow-lg transform hover:scale-105 transition-all duration-300">
+                Make a Reservation
+            </a>
+            <a href="https://maps.app.goo.gl/Yt8R1SqW5zfWdKVf9" target="_blank" rel="noopener noreferrer"
+                class="animate-float px-8 py-3 rounded-md text-base font-medium text-white bg-green-600 hover:bg-green-700 shadow-lg transform hover:scale-105 transition-all duration-300 inline-flex items-center gap-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+                Find Us
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <section class="text-center">
+        <h2 class="text-3xl font-bold text-gray-900">Our Specialties</h2>
+        <p class="mt-2 text-lg text-gray-600">A taste of what makes us special.</p>
+
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Enhanced Specialty Cards with 3D Hover Effects -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden scroll-reveal specialty-card" data-delay="0.1">
+                <div class="h-48 bg-gray-200 flex items-center justify-center overflow-hidden">
+                    <!-- Replaced placeholder text with actual image tag for lazy loading demonstration -->
+                    <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&q=80" alt="Dal Makhani"
+                        class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110"
+                        loading="lazy">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 text-gradient">Dal Makhani</h3>
+                    <p class="text-gray-600">Creamy black lentils slow-cooked with butter and aromatic spices</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden scroll-reveal specialty-card" data-delay="0.2">
+                <div class="h-48 bg-gray-200 flex items-center justify-center overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=800&q=80"
+                        alt="Paneer Tikka"
+                        class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110"
+                        loading="lazy">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 text-gradient">Paneer Tikka</h3>
+                    <p class="text-gray-600">Marinated cottage cheese grilled to perfection with Indian spices</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden scroll-reveal specialty-card" data-delay="0.3">
+                <div class="h-48 bg-gray-200 flex items-center justify-center overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=800&q=80" alt="Biryani"
+                        class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110"
+                        loading="lazy">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 text-gradient">Biryani</h3>
+                    <p class="text-gray-600">Fragrant basmati rice layered with tender meat and aromatic spices</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customer Reviews Section -->
+    <section class="text-center mt-16">
+        <h2 class="text-3xl font-bold text-gray-900">What Our Customers Say</h2>
+        <p class="mt-2 text-lg text-gray-600">Real reviews from our valued guests</p>
+
+        <!-- Overall Rating -->
+        <div class="mt-6 flex items-center justify-center gap-3 scroll-reveal" data-delay="0.1">
+            <div class="flex items-center gap-1">
+                <svg class="w-8 h-8 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                <span class="text-4xl font-bold text-gray-900">3.8</span>
+            </div>
+            <div class="text-left">
+                <div class="flex gap-1">
+                    <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    <svg class="w-5 h-5 text-gray-300 fill-current" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                </div>
+                <p class="text-sm text-gray-500 mt-1">Based on 300+ reviews</p>
+            </div>
+        </div>
+
+        <!-- Reviews Grid -->
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            <!-- Review Card 1 -->
+            <div class="review-card bg-white rounded-lg shadow-lg p-6 scroll-reveal hover:shadow-2xl transition-all duration-300"
+                data-delay="0.2">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="flex gap-1">
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-gray-700 italic mb-4">"Good place to eat with best quality and quantity of food. The menu
+                    is outspread and fairly priced. Worth visiting multiple times with friends and family for
+                    lip-smacking food!"</p>
+                <div class="flex items-center justify-center">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+                        <span class="text-indigo-600 font-bold text-lg">R</span>
+                    </div>
+                    <div class="ml-3 text-left">
+                        <p class="font-semibold text-gray-900">Rajesh K.</p>
+                        <p class="text-sm text-gray-500">Regular Customer</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Card 2 -->
+            <div class="review-card bg-white rounded-lg shadow-lg p-6 scroll-reveal hover:shadow-2xl transition-all duration-300"
+                data-delay="0.3">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="flex gap-1">
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        <svg class="w-5 h-5 text-gray-300 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-gray-700 italic mb-4">"Nice ambiance with creative interior and exterior design. The
+                    restaurant offers a cozy yet refined atmosphere with warm lighting and tasteful decor. Chicken
+                    Kolhapuri was absolutely delicious!"</p>
+                <div class="flex items-center justify-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <span class="text-green-600 font-bold text-lg">P</span>
+                    </div>
+                    <div class="ml-3 text-left">
+                        <p class="font-semibold text-gray-900">Priya M.</p>
+                        <p class="text-sm text-gray-500">Food Enthusiast</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Card 3 -->
+            <div class="review-card bg-white rounded-lg shadow-lg p-6 scroll-reveal hover:shadow-2xl transition-all duration-300"
+                data-delay="0.4">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="flex gap-1">
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-gray-700 italic mb-4">"Economical and fresh food with quick service! Perfect dining
+                    option when near Madh jetty. The staff is friendly and the portions are generous. Great value for
+                    money!"</p>
+                <div class="flex items-center justify-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                        <span class="text-purple-600 font-bold text-lg">A</span>
+                    </div>
+                    <div class="ml-3 text-left">
+                        <p class="font-semibold text-gray-900">Amit S.</p>
+                        <p class="text-sm text-gray-500">Local Visitor</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Call to Action -->
+        <div class="mt-12 scroll-reveal">
+            <p class="text-gray-600 mb-4">Experience it yourself!</p>
+            <a href="{% url 'reservation' %}"
+                class="nav-link inline-block px-8 py-3 bg-indigo-600 text-white rounded-md font-medium hover:bg-indigo-700 shadow-lg transform hover:scale-105 transition-all duration-300 animate-glow">
+                Book Your Table Now
+            </a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    // DOMContentLoaded removed for SPA compatibility
+    // Enhanced Intersection Observer for scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+
+                // Add specific animation based on data attribute
+                const animationType = entry.target.getAttribute('data-animation');
+                if (animationType === 'zoom') {
+                    entry.target.style.animation = 'zoomIn 0.8s ease-out forwards';
+                }
+
+                // Unobserve after animation
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe all scroll-reveal elements
+    document.querySelectorAll('.scroll-reveal').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Parallax effect for hero section
+    let lastScrollY = window.scrollY;
+    const heroSection = document.getElementById('hero-section');
+    const parallaxLayer = document.querySelector('.parallax-layer');
+
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+
+        // Parallax effect
+        if (parallaxLayer && scrollY < window.innerHeight) {
+            parallaxLayer.style.transform = `translateY(${scrollY * 0.5}px)`;
+        }
+
+        lastScrollY = scrollY;
+    }, { passive: true });
+    // End of script
+</script>
+
+{% endblock %}

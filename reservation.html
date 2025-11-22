@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}Make a Reservation - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-xl">
+
+        <h1 class="text-3xl font-bold text-center text-gray-900 mb-6">Make a Reservation</h1>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div
+            class="mb-4 p-4 rounded-md animate-slide-right
+                    {% if message.tags == 'success' %} bg-green-100 text-green-800 {% else %} bg-red-100 text-red-800 {% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="{% url 'reservation' %}" class="space-y-6">
+
+            {% csrf_token %}
+
+            <div class="scroll-reveal">
+                <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Full
+                    Name</label>
+                {{ form.name }}
+                {{ form.name.errors }}
+            </div>
+
+            <div class="scroll-reveal">
+                <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Email
+                    Address</label>
+                {{ form.email }}
+                {{ form.email.errors }}
+            </div>
+
+            <div class="scroll-reveal">
+                <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Phone
+                    (Optional)</label>
+                {{ form.phone }}
+                {{ form.phone.errors }}
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="scroll-reveal">
+                    <label for="{{ form.date.id_for_label }}"
+                        class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                    {{ form.date }}
+                    {{ form.date.errors }}
+                </div>
+
+                <div class="scroll-reveal">
+                    <label for="{{ form.time.id_for_label }}"
+                        class="block text-sm font-medium text-gray-700 mb-1">Time</label>
+                    {{ form.time }}
+                    {{ form.time.errors }}
+                </div>
+
+                <div class="scroll-reveal">
+                    <label for="{{ form.guests.id_for_label }}"
+                        class="block text-sm font-medium text-gray-700 mb-1">Guests (Max 45)</label>
+                    {{ form.guests }}
+                    {{ form.guests.errors }}
+                </div>
+            </div>
+
+            {% if form.non_field_errors %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded animate-shake">
+                {% for error in form.non_field_errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Availability Status Indicator -->
+            <div id="availability-status"
+                class="hidden p-4 rounded-md text-center font-medium transition-all duration-300">
+                <span id="availability-message"></span>
+            </div>
+
+            <button type="submit" id="submit-button"
+                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform hover:scale-105 transition-all duration-300 animate-glow">
+                Request Reservation
+            </button>
+        </form>
+
+    </div>
+</div>
+
+<script>
+    // DOMContentLoaded removed for SPA compatibility
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.scroll-reveal').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Add focus animations to form inputs
+    const formInputs = document.querySelectorAll('input, select, textarea');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function () {
+            this.parentElement.classList.add('animate-pulse');
+            setTimeout(() => {
+                this.parentElement.classList.remove('animate-pulse');
+            }, 600);
+        });
+    });
+
+    // Real-Time Availability Checker with Capacity
+    const dateInput = document.getElementById('id_date');
+    const timeInput = document.getElementById('id_time');
+    const guestsInput = document.getElementById('id_guests');
+    const availabilityStatus = document.getElementById('availability-status');
+    const availabilityMessage = document.getElementById('availability-message');
+    const submitButton = document.getElementById('submit-button');
+
+    function checkAvailability() {
+        const date = dateInput.value;
+        const time = timeInput.value;
+        const guests = guestsInput.value || '1';
+
+        // Only check if both date and time are selected
+        if (!date || !time) {
+            availabilityStatus.classList.add('hidden');
+            submitButton.disabled = false;
+            submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            return;
+        }
+
+        // Show loading state
+        availabilityStatus.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+        availabilityStatus.classList.add('bg-gray-100', 'text-gray-600');
+        availabilityMessage.textContent = '⏳ Checking availability...';
+
+        // Make AJAX request to check availability with guest count
+        fetch(`/check-availability/?date=${date}&time=${time}&guests=${guests}`)
+            .then(response => response.json())
+            .then(data => {
+                availabilityStatus.classList.remove('hidden', 'bg-gray-100', 'text-gray-600');
+
+                if (data.available === true) {
+                    // Available - show green message
+                    availabilityStatus.classList.add('bg-green-100', 'text-green-800', 'animate-bounce-in');
+                    availabilityMessage.textContent = data.message;
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else if (data.available === false) {
+                    // Not available - show red message and disable button
+                    availabilityStatus.classList.add('bg-red-100', 'text-red-800', 'animate-shake');
+                    availabilityMessage.textContent = data.message;
+                    submitButton.disabled = true;
+                    submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    // Neutral message
+                    availabilityStatus.classList.add('bg-gray-100', 'text-gray-600');
+                    availabilityMessage.textContent = data.message;
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            })
+            .catch(error => {
+                console.error('Error checking availability:', error);
+                availabilityStatus.classList.add('hidden');
+                submitButton.disabled = false;
+                submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            });
+    }
+
+    // Check availability when date, time, or guests changes
+    dateInput.addEventListener('change', checkAvailability);
+    timeInput.addEventListener('change', checkAvailability);
+    guestsInput.addEventListener('change', checkAvailability);
+    // End of script
+</script>
+
+{% endblock %}
